@@ -4,7 +4,7 @@
 <!-- YOU CAN DELETE EVERYTHING IN THIS PAGE -->
 
 <div class="container mx-auto p-8 space-y-8">
-	看板
+	tmp
 </div>
 
 <style lang="css">
