@@ -12,7 +12,6 @@ function setHost(host) {
 var jsonHeader = function () {
     let headers = new Headers()
     headers.append("Content-Type", "application/json;charset=utf-8")
-    headers.append("Authorization", _token)
     return headers
 }()
 
@@ -27,10 +26,18 @@ function genRequestUrl(url, params) {
     return requestUrl
 }
 
-
+/**
+ * 
+ * @param { string } url 
+ * @param { {headers:Headers, body:FormData | any, params:any} } 
+ * @returns {Promise<Response>}
+ */
 async function post(url, { headers, body, params }) {
     headers = (headers ?? jsonHeader)
     headers.append("Authorization", _token)
+    if (body instanceof FormData) {
+        headers
+    }
     return await fetch(genRequestUrl(url, params), {
         method: "POST",
         headers,
@@ -38,6 +45,12 @@ async function post(url, { headers, body, params }) {
     })
 }
 
+/**
+ * 
+ * @param { string } url 
+ * @param { {headers:Headers, body:FormData | any, params:any} } 
+ * @returns {Promise<Response>}
+ */
 async function get(url, { headers, body, params }) {
     headers = (headers ?? jsonHeader)
     headers.append("Authorization", _token)
