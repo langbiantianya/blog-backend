@@ -36,7 +36,7 @@ async function post(url, { headers, body, params }) {
     headers = (headers ?? jsonHeader)
     headers.append("Authorization", _token)
     if (body instanceof FormData) {
-        headers
+        headers.delete("Content-Type")
     }
     return await fetch(genRequestUrl(url, params), {
         method: "POST",
@@ -52,7 +52,7 @@ async function post(url, { headers, body, params }) {
  * @returns {Promise<Response>}
  */
 async function get(url, { headers, body, params }) {
-    headers = (headers ?? jsonHeader)
+    headers = (headers ?? new Headers())
     headers.append("Authorization", _token)
     return await fetch(genRequestUrl(url, params), {
         method: "GET",
