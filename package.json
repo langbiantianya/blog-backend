@@ -34,6 +34,8 @@
   "type": "module",
   "dependencies": {
     "blog-backend": "file:",
-    "highlight.js": "11.10.0"
+    "dayjs": "^1.11.13",
+    "highlight.js": "11.10.0",
+    "vditor": "^3.10.6"
   }
 }
