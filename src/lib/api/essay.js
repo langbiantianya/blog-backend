@@ -1,4 +1,4 @@
-import { get } from '$lib/Utils/Fetch.js';
+import { get } from '../Utils/Fetch';
 
 let essay = {
     list: async () => {
@@ -7,4 +7,4 @@ let essay = {
 }
 
 
-export { essay }
+export default  essay

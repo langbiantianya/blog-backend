@@ -1,6 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
-	import { essay } from './+server';
+	import essay from '$lib/api/essay';
 	import { Paginator } from '@skeletonlabs/skeleton';
 	import dayjs from 'dayjs';
 	import Vditor from 'vditor';
@@ -35,14 +35,18 @@
 				<section class="p-4 mb-4 truncate max-h-48 min-h-16">
 					{@html row.html}
 				</section>
-				<footer class="card-footer flex-wrap flex flex-auto grid-flow-row justify-between content-center">
+				<footer
+					class="card-footer flex-wrap flex flex-auto grid-flow-row justify-between content-center"
+				>
 					<div>
 						{#each row.tags as tag}
 							<span class="chip variant-filled m-0.5">{tag.name}</span>
 						{/each}
 					</div>
 					<div class="flex flex-wrap content-center justify-end flex-auto">
-						<span class="h-6 leading-6">{dayjs(new Date(row.updatedAt ?? row.createdAt)).format("YYYY/MM/DD HH:mm:ss")}</span>
+						<span class="h-6 leading-6"
+							>{dayjs(new Date(row.updatedAt ?? row.createdAt)).format('YYYY/MM/DD HH:mm:ss')}</span
+						>
 					</div>
 				</footer>
 			</li>
