@@ -1,5 +1,5 @@
-var _token = ""
-var _host = "http://localhost:8001"
+let _token = ""
+let _host = ""
 
 function setToken(token) {
     _token = token
@@ -9,14 +9,10 @@ function setHost(host) {
     _host = host
 }
 
-var jsonHeader = function () {
-    let headers = new Headers()
-    headers.append("Content-Type", "application/json;charset=utf-8")
-    return headers
-}()
+let jsonHeader = new Headers({ "Content-Type": "application/json;charset=utf-8" })
 
 function genRequestUrl(url, params) {
-    let requestUrl = `${_host}/${url}`
+    let requestUrl = `${_host}${url}`
     if (params) {
         requestUrl += "?"
         for (const key in params) {
@@ -32,8 +28,7 @@ function genRequestUrl(url, params) {
  * @param { {headers:Headers, body:FormData | any, params:any} } 
  * @returns {Promise<Response>}
  */
-async function post(url, { headers, body, params }) {
-    headers = (headers ?? jsonHeader)
+async function post(url, { headers = jsonHeader, body, params } = { headers: jsonHeader }) {
     headers.append("Authorization", _token)
     if (body instanceof FormData) {
         headers.delete("Content-Type")
@@ -51,8 +46,7 @@ async function post(url, { headers, body, params }) {
  * @param { {headers:Headers, body:FormData | any, params:any} } 
  * @returns {Promise<Response>}
  */
-async function get(url, { headers, body, params }) {
-    headers = (headers ?? new Headers())
+async function get(url, { headers = new Headers(), body, params } = { headers: new Headers() }) {
     headers.append("Authorization", _token)
     return await fetch(genRequestUrl(url, params), {
         method: "GET",

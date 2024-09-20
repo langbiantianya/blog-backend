@@ -1,8 +1,16 @@
 <script>
 	import { onMount } from 'svelte';
-	
-	onMount(() => {
+	import { essay } from './+server';
 
+	onMount(() => {
+		essay
+			.list()
+			.then((value) => {
+				console.log(value);
+			})
+			.catch((error) => {
+				console.error(error);
+			});
 	});
 </script>
 
