@@ -16,7 +16,7 @@ function genRequestUrl(url, params) {
     if (params) {
         requestUrl += "?"
         for (const key in params) {
-            requestUrl += `${key}=${params[key]}`
+            requestUrl += `${key}=${params[key]}&`
         }
     }
     return requestUrl

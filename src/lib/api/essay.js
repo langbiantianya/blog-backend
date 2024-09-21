@@ -1,10 +1,10 @@
 import { get } from '../Utils/Fetch';
 
 let essay = {
-    list: async () => {
-       return await get('api/v1/essay/list')
+    list: async (params) => {
+        return await get('api/v1/essay/list', { params })
     }
 }
 
 
-export default  essay
+export default essay

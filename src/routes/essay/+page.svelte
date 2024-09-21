@@ -7,20 +7,35 @@
 	let essayList = [];
 	let paginationSettings = {
 		page: 0,
-		limit: 5,
+		limit: 1,
 		size: 0,
 		amounts: [1, 2, 5, 10]
 	};
-
-	onMount(async () => {
-		let response = await essay.list();
+	async function loadEssayPage({ page, limit } = {}) {
+		let response = await essay.list({
+			page: page ?? paginationSettings.page + 1,
+			limit: limit ?? paginationSettings.limit
+		});
 		let body = await response.json();
-		for (let index = 0; index < body.length; index++) {
-			const row = body[index];
+		let list = [];
+		for (let index = 0; index < body.data.length; index++) {
+			const row = body.data[index];
 			row.html = await Vditor.md2html(row.post, { cdn: 'vditor' });
+			list.push(row);
 		}
-		essayList = body;
-		paginationSettings.size = body.length;
+		essayList = list;
+		paginationSettings.size = body.size;
+		paginationSettings.page = body.page - 1;
+		paginationSettings.limit = body.limit;
+	}
+	function pageAmount(limit) {
+		loadEssayPage({ limit: limit.detail });
+	}
+	function page(page) {
+		loadEssayPage({ page: page.detail + 1 });
+	}
+	onMount(() => {
+		loadEssayPage();
 	});
 </script>
 
@@ -57,6 +72,8 @@
 		bind:settings={paginationSettings}
 		showFirstLastButtons={true}
 		showPreviousNextButtons={true}
+		on:amount={pageAmount}
+		on:page={page}
 	/>
 </div>
 
