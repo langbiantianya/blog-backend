@@ -7,14 +7,15 @@
 	let essayList = [];
 	let paginationSettings = {
 		page: 0,
-		limit: 1,
+		limit: 5,
 		size: 0,
 		amounts: [1, 2, 5, 10]
 	};
 	async function loadEssayPage({ page, limit } = {}) {
 		let response = await essay.list({
 			page: page ?? paginationSettings.page + 1,
-			limit: limit ?? paginationSettings.limit
+			limit: limit ?? paginationSettings.limit,
+			hide: false
 		});
 		let body = await response.json();
 		let list = [];
@@ -43,19 +44,21 @@
 <div class="container mx-auto p-8 space-y-8">
 	<ul>
 		{#each essayList as row}
-			<li class="card px-4 pb-4 mb-4">
+			<li class="card px-4 card-hover pb-4 mb-4">
 				<header class="card-header">
 					<h1>{row.title}</h1>
 				</header>
-				<section class="p-4 mb-4 truncate max-h-48 min-h-16">
-					{@html row.html}
-				</section>
+				<a href="/edit?id={row.id}">
+					<section class="p-4 mb-4 truncate max-h-48 min-h-16">
+						{@html row.html}
+					</section>
+				</a>
 				<footer
 					class="card-footer flex-wrap flex flex-auto grid-flow-row justify-between content-center"
 				>
 					<div>
 						{#each row.tags as tag}
-							<span class="chip variant-filled m-0.5">{tag.name}</span>
+							<span class="badge variant-filled m-0.5">{tag.name}</span>
 						{/each}
 					</div>
 					<div class="flex flex-wrap content-center justify-end flex-auto">
