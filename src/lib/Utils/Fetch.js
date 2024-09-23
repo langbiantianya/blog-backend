@@ -46,6 +46,24 @@ async function post(url, { headers = jsonHeader, body, params } = { headers: jso
  * @param { {headers:Headers, body:FormData | any, params:any} } 
  * @returns {Promise<Response>}
  */
+async function put(url, { headers = jsonHeader, body, params } = { headers: jsonHeader }) {
+    headers.append("Authorization", _token)
+    if (body instanceof FormData) {
+        headers.delete("Content-Type")
+    }
+    return await fetch(genRequestUrl(url, params), {
+        method: "PUT",
+        headers,
+        body: body instanceof FormData ? body : JSON.stringify(body)
+    })
+}
+
+/**
+ * 
+ * @param { string } url 
+ * @param { {headers:Headers, body:FormData | any, params:any} } 
+ * @returns {Promise<Response>}
+ */
 async function get(url, { headers = new Headers(), body, params } = { headers: new Headers() }) {
     headers.append("Authorization", _token)
     return await fetch(genRequestUrl(url, params), {
@@ -58,6 +76,7 @@ async function get(url, { headers = new Headers(), body, params } = { headers: n
 export {
     post,
     get,
+    put,
     setToken,
     setHost
 }

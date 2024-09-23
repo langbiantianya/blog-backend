@@ -19,13 +19,16 @@
 		});
 		let body = await response.json();
 		let list = [];
-		for (let index = 0; index < body.data.length; index++) {
-			const row = body.data[index];
-			row.html = await Vditor.md2html(row.post, { cdn: 'vditor' });
-			list.push(row);
+		if (body.data) {
+			for (let index = 0; index < body.data.length; index++) {
+				const row = body.data[index];
+				row.html = await Vditor.md2html(row.post, { cdn: 'vditor' });
+				row.tags = row.tags ?? [];
+				list.push(row);
+			}
 		}
 		essayList = list;
-		paginationSettings.size = body.size;
+		paginationSettings.size = body.size ?? 0;
 		paginationSettings.page = body.page - 1;
 		paginationSettings.limit = body.limit;
 	}
@@ -35,6 +38,12 @@
 	function page(page) {
 		loadEssayPage({ page: page.detail + 1 });
 	}
+	function hideEssay(id) {
+		essay.hide(id).then((response) => {
+			loadEssayPage();
+		});
+	}
+
 	onMount(() => {
 		loadEssayPage();
 	});
@@ -45,10 +54,15 @@
 	<ul>
 		{#each essayList as row}
 			<li class="card px-4 card-hover pb-4 mb-4">
-				<header class="card-header">
+				<header
+					class="card-header flex-wrap flex flex-auto grid-flow-row justify-between content-center"
+				>
 					<h1>{row.title}</h1>
+					<button class="chip variant-soft hover:variant-filled" on:click={hideEssay(row.id)}>
+						<span>撤回</span>
+					</button>
 				</header>
-				<a href="/edit?id={row.id}">
+				<a href="/preview/{row.id}">
 					<section class="p-4 mb-4 truncate max-h-48 min-h-16">
 						{@html row.html}
 					</section>
@@ -58,7 +72,7 @@
 				>
 					<div>
 						{#each row.tags as tag}
-							<span class="badge variant-filled m-0.5">{tag.name}</span>
+							<span class="chip variant-filled m-0.5">{tag.name}</span>
 						{/each}
 					</div>
 					<div class="flex flex-wrap content-center justify-end flex-auto">

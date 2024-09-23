@@ -4,7 +4,7 @@
 	import { Paginator } from '@skeletonlabs/skeleton';
 	import dayjs from 'dayjs';
 	import Vditor from 'vditor';
-	let essayList = [];
+	let essayList = [{ id: '', tags: [], createdAt: '' }];
 	let paginationSettings = {
 		page: 0,
 		limit: 5,
@@ -22,6 +22,7 @@
 		for (let index = 0; index < body.data.length; index++) {
 			const row = body.data[index];
 			row.html = await Vditor.md2html(row.post, { cdn: 'vditor' });
+			row.tags = row.tags ?? [];
 			list.push(row);
 		}
 		essayList = list;
@@ -46,21 +47,30 @@
 	<ul>
 		{#each essayList as row}
 			<li class="card px-4 card-hover pb-4 mb-4">
-				<header class="card-header">
+				<header
+					class="card-header flex-wrap flex flex-auto grid-flow-row justify-between content-center"
+				>
 					<h1>{row.title}</h1>
+					<div class="">
+						<button class="chip variant-soft hover:variant-filled">
+							<span>编辑</span>
+						</button>
+						<button class="chip variant-soft hover:variant-filled">
+							<span>发布</span>
+						</button>
+					</div>
 				</header>
 				<a href="/edit?id={row.id}">
 					<section class="p-4 mb-4 truncate max-h-48 min-h-16">
 						{@html row.html}
 					</section>
 				</a>
-
 				<footer
 					class="card-footer flex-wrap flex flex-auto grid-flow-row justify-between content-center"
 				>
 					<div>
 						{#each row.tags as tag}
-							<span class="badge variant-filled m-0.5">{tag.name}</span>
+							<span class="chip variant-filled m-0.5">{tag.name}</span>
 						{/each}
 					</div>
 					<div class="flex flex-wrap content-center justify-end flex-auto">
