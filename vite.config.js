@@ -1,15 +1,20 @@
 import { purgeCss } from 'vite-plugin-tailwind-purgecss';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
+import dotenv from 'dotenv'; // 引入 dotenv
 
-export default defineConfig({
-	plugins: [sveltekit(), purgeCss()],
-	server: {
-		proxy: {
-			'/api': {
-				target: 'http://localhost:8001/api/',
-				changeOrigin: true,
-				rewrite: (path) => path.replace(/^\/api/, '')
+// 加载.env 文件
+dotenv.config();
+export default defineConfig(() => {
+	return {
+		plugins: [sveltekit(), purgeCss()],
+		server: {
+			proxy: {
+				'/api': {
+					target: process.env.API_URL,
+					changeOrigin: true,
+					rewrite: (path) => path.replace(/^\/api/, '')
+				}
 			}
 		}
 	}
