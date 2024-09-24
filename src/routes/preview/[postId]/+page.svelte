@@ -6,7 +6,6 @@
 
 	export let data;
 	let post = {
-		tags: []
 	};
 	onMount(async () => {
 		let response = await essay.info(data.post.id);

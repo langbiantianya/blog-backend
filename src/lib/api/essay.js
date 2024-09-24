@@ -8,10 +8,13 @@ async function info(id) {
 async function hide(id) {
     return await put(`/api/v1/essay/hide/${id}`)
 }
-
+async function publish(id){
+    return await put(`/api/v1/essay/publish/${id}`)
+}
 export default {
     list,
     info,
-    hide
+    hide,
+    publish
 }
 

@@ -2,9 +2,10 @@
 	import { onMount } from 'svelte';
 	import essay from '$lib/api/essay';
 	import { Paginator } from '@skeletonlabs/skeleton';
+	import { goto } from '$app/navigation';
 	import dayjs from 'dayjs';
 	import Vditor from 'vditor';
-	let essayList = [{ id: '', tags: [], createdAt: '' }];
+	let essayList = [];
 	let paginationSettings = {
 		page: 0,
 		limit: 5,
@@ -19,12 +20,15 @@
 		});
 		let body = await response.json();
 		let list = [];
-		for (let index = 0; index < body.data.length; index++) {
-			const row = body.data[index];
-			row.html = await Vditor.md2html(row.post, { cdn: 'vditor' });
-			row.tags = row.tags ?? [];
-			list.push(row);
+		if (body.data) {
+			for (let index = 0; index < body.data.length; index++) {
+				const row = body.data[index];
+				row.html = await Vditor.md2html(row.post, { cdn: 'vditor' });
+				row.tags = row.tags ?? [];
+				list.push(row);
+			}
 		}
+
 		essayList = list;
 		paginationSettings.size = body.size;
 		paginationSettings.page = body.page - 1;
@@ -35,6 +39,14 @@
 	}
 	function page(page) {
 		loadEssayPage({ page: page.detail + 1 });
+	}
+	function publish(id) {
+		essay.publish(id).then((response) => {
+			loadEssayPage();
+		});
+	}
+	function edit(id) {
+		goto(`/edit/${id}`);
 	}
 	onMount(() => {
 		loadEssayPage();
@@ -52,15 +64,15 @@
 				>
 					<h1>{row.title}</h1>
 					<div class="">
-						<button class="chip variant-soft hover:variant-filled">
+						<button class="chip variant-soft hover:variant-filled" on:click={edit(row.id)}>
 							<span>编辑</span>
 						</button>
-						<button class="chip variant-soft hover:variant-filled">
+						<button class="chip variant-soft hover:variant-filled" on:click={publish(row.id)}>
 							<span>发布</span>
 						</button>
 					</div>
 				</header>
-				<a href="/edit?id={row.id}">
+				<a href="/preview/{row.id}">
 					<section class="p-4 mb-4 truncate max-h-48 min-h-16">
 						{@html row.html}
 					</section>

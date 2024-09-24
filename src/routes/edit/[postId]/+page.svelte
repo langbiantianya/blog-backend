@@ -3,18 +3,24 @@
 	import { onMount } from 'svelte';
 	import Vditor from 'vditor';
 	import { browser } from '$app/environment';
+	export let data;
+	let post;
 	let vditor;
 	let vditorHTMLElement;
 	let vditorContentTheme;
 	let isDarkMode = browser ? window.matchMedia('(prefers-color-scheme: dark)').matches : false;
 
 	onMount(async () => {
+		let response = await essay.info(data.post.id);
+		let body = await response.json();
+		post = body;
 		vditor = new Vditor(vditorHTMLElement, {
 			theme: browser ? (isDarkMode ? 'dark' : 'classic') : 'classic',
 			mode: 'wysiwyg',
 			minHeight: 800,
 			cdn: '/vditor',
 			cache: {
+				id: post.id,
 				enable: false
 			},
 			toolbar: [
@@ -68,6 +74,7 @@
 				// 	click: (event, vditor) => {}
 				// }
 			],
+			value: post.post
 		});
 		if (browser) {
 			window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
