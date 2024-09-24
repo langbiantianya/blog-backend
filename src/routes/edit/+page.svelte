@@ -1,5 +1,4 @@
 <script>
-	import essay from '$lib/api/essay';
 	import { onMount } from 'svelte';
 	import Vditor from 'vditor';
 	import { browser } from '$app/environment';
