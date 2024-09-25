@@ -1,5 +1,6 @@
 <script>
 	import essay from '$lib/api/essay';
+	import { InputChip } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 	import Vditor from 'vditor';
 	import { browser } from '$app/environment';
@@ -9,11 +10,17 @@
 	let vditorHTMLElement;
 	let vditorContentTheme;
 	let isDarkMode = browser ? window.matchMedia('(prefers-color-scheme: dark)').matches : false;
-
-	onMount(async () => {
+	let selectedTag = [];
+	async function loadEssay() {
 		let response = await essay.info(data.post.id);
 		let body = await response.json();
 		post = body;
+		if (post.tags) {
+			post.tags.forEach((tag) => {
+				selectedTag.push(tag.name);
+				selectedTag = selectedTag;
+			});
+		}
 		vditor = new Vditor(vditorHTMLElement, {
 			theme: browser ? (isDarkMode ? 'dark' : 'classic') : 'classic',
 			mode: 'wysiwyg',
@@ -76,6 +83,12 @@
 			],
 			value: post.post
 		});
+	}
+	onMount(() => {
+		// loadTags().then(() => {
+
+		// });
+		loadEssay();
 		if (browser) {
 			window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
 				isDarkMode = event.matches;
@@ -98,6 +111,7 @@
 	href="/vditor/dist/css/content-theme/{browser ? (isDarkMode ? 'dark' : 'light') : 'light'}.css"
 />
 <div class="container mx-auto p-8 space-y-8">
+	<InputChip bind:value={selectedTag} name="chips" placeholder="请输入新的标签" />
 	<div bind:this={vditorHTMLElement} />
 </div>
 

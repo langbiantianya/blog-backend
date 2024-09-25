@@ -1,4 +1,5 @@
 <script>
+	import { InputChip } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 	import Vditor from 'vditor';
 	import { browser } from '$app/environment';
@@ -6,7 +7,7 @@
 	let vditorHTMLElement;
 	let vditorContentTheme;
 	let isDarkMode = browser ? window.matchMedia('(prefers-color-scheme: dark)').matches : false;
-
+	let selectedTag = [];
 	onMount(async () => {
 		vditor = new Vditor(vditorHTMLElement, {
 			theme: browser ? (isDarkMode ? 'dark' : 'classic') : 'classic',
@@ -66,7 +67,7 @@
 				// 	level: undefined,
 				// 	click: (event, vditor) => {}
 				// }
-			],
+			]
 		});
 		if (browser) {
 			window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
@@ -90,6 +91,7 @@
 	href="/vditor/dist/css/content-theme/{browser ? (isDarkMode ? 'dark' : 'light') : 'light'}.css"
 />
 <div class="container mx-auto p-8 space-y-8">
+	<InputChip bind:value={selectedTag} name="chips" placeholder="请输入新的标签" />
 	<div bind:this={vditorHTMLElement} />
 </div>
 
