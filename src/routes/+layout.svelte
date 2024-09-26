@@ -3,7 +3,7 @@
 	import { AppShell, AppBar } from '@skeletonlabs/skeleton';
 	import { Avatar } from '@skeletonlabs/skeleton';
 	import Navigation from '$lib/Navigation/Navigation.svelte';
-	import { initializeStores, Drawer, getDrawerStore } from '@skeletonlabs/skeleton';
+	import { initializeStores, Drawer, getDrawerStore, Toast } from '@skeletonlabs/skeleton';
 	// Highlight JS
 	import hljs from 'highlight.js/lib/core';
 	import 'highlight.js/styles/github-dark.css';
@@ -12,6 +12,9 @@
 	import css from 'highlight.js/lib/languages/css';
 	import javascript from 'highlight.js/lib/languages/javascript';
 	import typescript from 'highlight.js/lib/languages/typescript';
+	import { onMount } from 'svelte';
+	import { autoModeWatcher } from '@skeletonlabs/skeleton';
+	import { LightSwitch } from '@skeletonlabs/skeleton';
 
 	hljs.registerLanguage('xml', xml); // for HTML
 	hljs.registerLanguage('css', css);
@@ -21,17 +24,23 @@
 
 	const drawerStore = getDrawerStore();
 	storeHighlightJs.set(hljs);
+	onMount(() => {
+		autoModeWatcher();
+	});
 	function drawerOpen() {
 		drawerStore.open({});
 	}
 </script>
 
 <!-- App Shell -->
+<Toast />
+
 <Drawer>
 	<h2 class="p-4">Navigation</h2>
 	<hr />
 	<Navigation />
 </Drawer>
+
 <AppShell slotSidebarLeft="bg-surface-500/5 w-0 lg:w-64">
 	<svelte:fragment slot="header">
 		<AppBar gridColumns="grid-cols-3" slotDefault="place-self-center" slotTrail="place-content-end">
@@ -51,6 +60,7 @@
 			</svelte:fragment>
 			(title)
 			<svelte:fragment slot="trail">
+				<LightSwitch />
 				<Avatar src="https://i.pravatar.cc/" rounded="rounded-full" width="w-8" />
 			</svelte:fragment>
 		</AppBar>

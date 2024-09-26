@@ -1,17 +1,34 @@
 <script>
 	import essay from '$lib/api/essay';
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 	import dayjs from 'dayjs';
 	import Vditor from 'vditor';
 
 	export let data;
 	let post = {};
-	onMount(async () => {
+	async function loadEssay() {
 		let response = await essay.info(data.post.id);
 		let body = await response.json();
 		body.html = (await Vditor.md2html(body.post, { cdn: '/vditor' })) ?? '';
 		body.tags = body.tags ?? [];
 		post = body;
+	}
+	function publish(id) {
+		essay.publish(id).then((response) => {
+			loadEssay();
+		});
+	}
+	function hideEssay(id) {
+		essay.hide(id).then((response) => {
+			loadEssay();
+		});
+	}
+	function edit(id) {
+		goto(`/edit/${id}`);
+	}
+	onMount(async () => {
+		loadEssay();
 	});
 </script>
 
@@ -22,8 +39,23 @@
 		<header
 			class="card-header flex-wrap flex flex-auto grid-flow-row justify-between content-center"
 		>
-			{#if post.html}
-				<h1>{post.title}</h1>{/if}
+			{#if post.title}
+				<h1>{post.title}</h1>
+				<div class="">
+					{#if post.hide}
+						<button class="chip variant-soft hover:variant-filled" on:click={edit(post.id)}>
+							<span>编辑</span>
+						</button>
+						<button class="chip variant-soft hover:variant-filled" on:click={publish(post.id)}>
+							<span>发布</span>
+						</button>
+					{:else}
+						<button class="chip variant-soft hover:variant-filled" on:click={hideEssay(post.id)}>
+							<span>撤回</span>
+						</button>
+					{/if}
+				</div>
+			{/if}
 		</header>
 		<div>
 			{#if post.html}
