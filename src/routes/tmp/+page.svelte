@@ -30,7 +30,7 @@
 		}
 
 		essayList = list;
-		paginationSettings.size = body.size;
+		paginationSettings.size = body.size ?? 0;
 		paginationSettings.page = body.page - 1;
 		paginationSettings.limit = body.limit;
 	}
